@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3:*)",
+      "Bash(pip3 install:*)",
+      "Bash(pip3 list:*)",
+      "Bash(marp:*)",
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(mkdir:*)",
+      "Bash(cp:*)",
+      "Bash(mv:*)",
+      "Bash(npm install:*)",
+      "Bash(npm list:*)",
+      "Bash(open:*)",
+      "Read(~/Documents/claude-slides/**)",
+      "Write(~/Documents/claude-slides/**)"
+    ],
+    "defaultMode": "default"
+  }
+}
