@@ -71,6 +71,30 @@ else
     echo -e "${YELLOW}⚠ 已有 Claude 設定檔，略過（不覆蓋）${NC}"
 fi
 
+# 6b. 安裝狀態列腳本
+if [ -f "$SCRIPT_DIR/statusline-command.sh" ]; then
+    cp "$SCRIPT_DIR/statusline-command.sh" "$CLAUDE_DIR/statusline-command.sh"
+    chmod +x "$CLAUDE_DIR/statusline-command.sh"
+    echo -e "${GREEN}✓ 狀態列腳本已安裝${NC}"
+fi
+
+# 6c. 將 statusLine 設定注入 settings.json（若尚未存在）
+if ! grep -q '"statusLine"' "$CLAUDE_DIR/settings.json" 2>/dev/null; then
+    python3 -c "
+import json
+path = '$CLAUDE_DIR/settings.json'
+sl_path = '$CLAUDE_DIR/statusline-command.sh'
+with open(path) as f:
+    data = json.load(f)
+data['statusLine'] = {'type': 'command', 'command': f'bash {sl_path}'}
+with open(path, 'w') as f:
+    json.dump(data, f, indent=2, ensure_ascii=False)
+"
+    echo -e "${GREEN}✓ 狀態列已加入設定檔${NC}"
+else
+    echo -e "${GREEN}✓ 狀態列設定已存在，略過${NC}"
+fi
+
 # 7. 設定 NO_FLICKER 模式（改善終端機顯示）
 SHELL_RC=""
 if [ -f "$HOME/.zshrc" ]; then
