@@ -95,27 +95,18 @@ else
     echo -e "${GREEN}✓ 狀態列設定已存在，略過${NC}"
 fi
 
-# 7. 設定 NO_FLICKER 模式（改善終端機顯示）
-SHELL_RC=""
-if [ "$SHELL" = "/bin/zsh" ] || [ "$SHELL" = "/usr/bin/zsh" ]; then
-    SHELL_RC="$HOME/.zshrc"
-elif [ -f "$HOME/.bash_profile" ]; then
-    SHELL_RC="$HOME/.bash_profile"
-elif [ -f "$HOME/.bashrc" ]; then
-    SHELL_RC="$HOME/.bashrc"
+# 7. 建立 slides 指令（放到 claude 同一個 bin 目錄，不需重開 Terminal）
+CLAUDE_BIN=$(which claude 2>/dev/null)
+if [ -n "$CLAUDE_BIN" ]; then
+    SLIDES_PATH="$(dirname "$CLAUDE_BIN")/slides"
+    cat > "$SLIDES_PATH" << 'SLIDESEOF'
+#!/bin/bash
+cd ~/Documents/claude-slides && exec claude "$@"
+SLIDESEOF
+    chmod +x "$SLIDES_PATH"
+    echo -e "${GREEN}✓ 'slides' 指令已建立：$SLIDES_PATH${NC}"
 else
-    SHELL_RC="$HOME/.bash_profile"
-fi
-
-if [ -n "$SHELL_RC" ]; then
-    if ! grep -q "claude-slides.*NO_FLICKER" "$SHELL_RC" 2>/dev/null; then
-        echo "" >> "$SHELL_RC"
-        echo "# Claude Code 投影片助手（無閃爍模式）" >> "$SHELL_RC"
-        echo "alias slides='cd ~/Documents/claude-slides && claude'" >> "$SHELL_RC"
-        echo -e "${GREEN}✓ 已新增 'slides' 指令到 $SHELL_RC${NC}"
-    else
-        echo -e "${GREEN}✓ 'slides' 指令已存在，略過${NC}"
-    fi
+    echo -e "${RED}✗ 找不到 claude 路徑，請確認 Claude Code 已安裝${NC}"
 fi
 
 echo ""
