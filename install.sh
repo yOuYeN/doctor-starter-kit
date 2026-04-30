@@ -97,10 +97,14 @@ fi
 
 # 7. 設定 NO_FLICKER 模式（改善終端機顯示）
 SHELL_RC=""
-if [ -f "$HOME/.zshrc" ]; then
+if [ "$SHELL" = "/bin/zsh" ] || [ "$SHELL" = "/usr/bin/zsh" ]; then
     SHELL_RC="$HOME/.zshrc"
+elif [ -f "$HOME/.bash_profile" ]; then
+    SHELL_RC="$HOME/.bash_profile"
 elif [ -f "$HOME/.bashrc" ]; then
     SHELL_RC="$HOME/.bashrc"
+else
+    SHELL_RC="$HOME/.bash_profile"
 fi
 
 if [ -n "$SHELL_RC" ]; then
