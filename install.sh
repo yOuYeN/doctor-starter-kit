@@ -107,7 +107,7 @@ if [ -n "$SHELL_RC" ]; then
     if ! grep -q "claude-slides.*NO_FLICKER" "$SHELL_RC" 2>/dev/null; then
         echo "" >> "$SHELL_RC"
         echo "# Claude Code 投影片助手（無閃爍模式）" >> "$SHELL_RC"
-        echo "alias slides='cd ~/Documents/claude-slides && CLAUDE_CODE_NO_FLICKER=1 claude'" >> "$SHELL_RC"
+        echo "alias slides='cd ~/Documents/claude-slides && claude'" >> "$SHELL_RC"
         echo -e "${GREEN}✓ 已新增 'slides' 指令到 $SHELL_RC${NC}"
     else
         echo -e "${GREEN}✓ 'slides' 指令已存在，略過${NC}"
