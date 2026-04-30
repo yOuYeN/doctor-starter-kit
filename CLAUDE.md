@@ -114,19 +114,31 @@ from pptx.dml.color import RGBColor
 
 **每完成一章告訴使用者：**
 ```
-✓ Ch.X 完成 → output/ChXX_主題.pptx
+✓ Ch.X 完成
+
+B1 → output/ChXX_主題.pptx（PPTX 已存好，可直接開啟）
+B2 → output/YYYY-MM-DD_ChX_主題.md（.md 已存好，拖曳到 Claude Design 即可）
+
 下一步：
 • 「繼續 Ch.X+1」
 • 「第 X 章第 N 張修改：[說明]」
-• 「把所有章節合併成一個 pptx」
+• 「把所有章節合併成一個 pptx / md」
 ```
 
-### 選 B2（Marp 程式碼）
+### 選 B2（Marp .md 檔）
 
 產生完整 Marp markdown，包含：
 - CSS 樣式（依選定風格和字型，使用系統字型堆疊，不依賴 Google Fonts）
 - 每張投影片內容
 - 圖片位置用 `<!-- INSERT: Fig. X-X -->` 佔位
+
+**生成後立即用 Write 工具存檔：**
+```
+檔名：output/YYYY-MM-DD_Ch[章節編號]_[英文主題].md
+範例：output/2026-04-30_Ch4_principles-adjustive.md
+```
+
+不輸出純文字到對話，直接寫入檔案。
 
 **CSS 字型範例（跨平台安全）：**
 ```css
