@@ -15,21 +15,30 @@ echo "  Claude Code 簡報助手 - 安裝程式"
 echo "====================================="
 echo ""
 
-# 1. 檢查 Claude Code 是否已安裝
-if ! command -v claude &> /dev/null; then
-    echo -e "${RED}✗ 尚未安裝 Claude Code${NC}"
-    echo ""
-    echo "請先執行以下指令安裝："
-    echo "  npm install -g @anthropic-ai/claude-code"
-    echo ""
-    echo "若尚未安裝 Node.js，請先前往 https://nodejs.org 下載安裝。"
-    exit 1
-fi
-echo -e "${GREEN}✓ Claude Code 已安裝${NC}"
+# 0. 擴展 PATH（確保 npm 全域安裝的工具可以被找到）
+export PATH="/usr/local/bin:/opt/homebrew/bin:$HOME/.local/bin:$PATH"
+[ -s "$HOME/.nvm/nvm.sh" ] && source "$HOME/.nvm/nvm.sh"
 
-# 2. 檢查 Marp CLI
+# 1. 確認或自動安裝 Claude Code
+if ! command -v claude &> /dev/null; then
+    if ! command -v npm &> /dev/null; then
+        echo -e "${RED}✗ 尚未安裝 Node.js${NC}"
+        echo ""
+        echo "請先前往 https://nodejs.org 下載安裝 Node.js，"
+        echo "完成後重新執行此腳本。"
+        exit 1
+    fi
+    echo -e "${YELLOW}→ 正在安裝 Claude Code...${NC}"
+    npm install -g @anthropic-ai/claude-code
+    export PATH="/usr/local/bin:/opt/homebrew/bin:$HOME/.local/bin:$PATH"
+    echo -e "${GREEN}✓ Claude Code 安裝完成${NC}"
+else
+    echo -e "${GREEN}✓ Claude Code 已安裝${NC}"
+fi
+
+# 2. 確認或自動安裝 Marp CLI
 if ! command -v marp &> /dev/null; then
-    echo -e "${YELLOW}→ 正在安裝 Marp CLI（Markdown 轉 PowerPoint 工具）...${NC}"
+    echo -e "${YELLOW}→ 正在安裝 Marp CLI...${NC}"
     npm install -g @marp-team/marp-cli
     echo -e "${GREEN}✓ Marp CLI 安裝完成${NC}"
 else
@@ -60,7 +69,7 @@ if [ -f "$SCRIPT_DIR/skills/make-slides.md" ]; then
     echo -e "${GREEN}✓ make-slides skill 已安裝${NC}"
 fi
 
-# 6. 設定 Claude 權限（若尚未有設定檔）
+# 6. 設定 Claude 權限
 CLAUDE_DIR="$HOME/.claude"
 mkdir -p "$CLAUDE_DIR"
 
@@ -68,7 +77,7 @@ if [ ! -f "$CLAUDE_DIR/settings.json" ]; then
     cp "$SCRIPT_DIR/claude-settings.json" "$CLAUDE_DIR/settings.json"
     echo -e "${GREEN}✓ Claude 設定檔已安裝${NC}"
 else
-    echo -e "${YELLOW}⚠ 已有 Claude 設定檔，略過（不覆蓋）${NC}"
+    echo -e "${GREEN}✓ 已有 Claude 設定檔，略過${NC}"
 fi
 
 # 6b. 安裝狀態列腳本
@@ -104,9 +113,9 @@ if [ -n "$CLAUDE_BIN" ]; then
 cd ~/Documents/claude-slides && exec claude "$@"
 SLIDESEOF
     chmod +x "$SLIDES_PATH"
-    echo -e "${GREEN}✓ 'slides' 指令已建立：$SLIDES_PATH${NC}"
+    echo -e "${GREEN}✓ 'slides' 指令已建立${NC}"
 else
-    echo -e "${RED}✗ 找不到 claude 路徑，請確認 Claude Code 已安裝${NC}"
+    echo -e "${RED}✗ 找不到 claude 路徑，slides 指令未建立${NC}"
 fi
 
 echo ""
@@ -114,11 +123,10 @@ echo "====================================="
 echo -e "${GREEN}  安裝完成！${NC}"
 echo "====================================="
 echo ""
-echo "接下來請關閉並重新開啟終端機，然後輸入："
+echo "現在直接輸入："
 echo ""
 echo "  slides"
 echo ""
-echo "（這個指令會直接進入工作資料夾並啟動 Claude Code）"
+echo "即可啟動 Claude Code 簡報助手。"
 echo "進入後用中文告訴 Claude 你要做什麼。"
-echo "詳細說明請參閱 README.md。"
 echo ""
